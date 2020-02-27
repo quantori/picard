@@ -8,16 +8,7 @@ import org.broadinstitute.barclay.argparser.CommandLineProgramProperties;
 import org.broadinstitute.barclay.argparser.ExperimentalFeature;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -110,7 +101,11 @@ public class PicardCommandLine {
 
     /** Override this if you want to include different java packages to search for classes that extend CommandLineProgram. **/
     public static void main(final String[] args) {
-        System.exit(new PicardCommandLine().instanceMain(args, getPackageList(), COMMAND_LINE_NAME));
+        System.exit(startProcess(args));
+    }
+
+    public static int startProcess(final String[] args) {
+        return new PicardCommandLine().instanceMain(args, getPackageList(), COMMAND_LINE_NAME);
     }
 
     /** Returns the command line program specified, or prints the usage and exits with exit code 1 **/

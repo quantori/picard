@@ -23,7 +23,10 @@
  */
 package picard.sam;
 
-import htsjdk.samtools.*;
+import htsjdk.samtools.SAMFileHeader;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.CloserUtil;
 import htsjdk.samtools.util.IOUtil;
 import htsjdk.samtools.util.Log;
@@ -72,11 +75,11 @@ import java.io.File;
  * @author alecw@broadinstitute.org
  */
 @CommandLineProgramProperties(
-        summary = SortSam.USAGE_DETAILS,
-        oneLineSummary = SortSam.USAGE_SUMMARY,
+        summary = SortSamReadTest.USAGE_DETAILS,
+        oneLineSummary = SortSamReadTest.USAGE_SUMMARY,
         programGroup = ReadDataManipulationProgramGroup.class)
 @DocumentedFeature
-public class SortSam extends CommandLineProgram {
+public class SortSamReadTest extends CommandLineProgram {
     static final String USAGE_SUMMARY = "Sorts a SAM or BAM file";
     static final String USAGE_DETAILS = "This tool sorts the input SAM or BAM file by coordinate, queryname (QNAME), or some other property " +
             "of the SAM record. The SortOrder of a SAM/BAM file is found in the SAM file header tag @HD in the field labeled SO.  " +
@@ -104,7 +107,7 @@ public class SortSam extends CommandLineProgram {
     public SortOrder SORT_ORDER;
 
 
-    private final Log log = Log.getInstance(SortSam.class);
+    private final Log log = Log.getInstance(SortSamReadTest.class);
 
     /** a SortOrder class intended to expose the various options available as inputs to SortSam
      *
@@ -147,20 +150,20 @@ public class SortSam extends CommandLineProgram {
         final SamReader reader = SamReaderFactory.makeDefault().referenceSequence(REFERENCE_SEQUENCE).open(INPUT);
 
         reader.getFileHeader().setSortOrder(SORT_ORDER.getSortOrder());
-        final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, OUTPUT);
-        writer.setProgressLogger(
-                new ProgressLogger(log, (int) 1e7, "Wrote", "records from a sorting collection"));
+//        final SAMFileWriter writer = new SAMFileWriterFactory().makeSAMOrBAMWriter(reader.getFileHeader(), false, OUTPUT);
+//        writer.setProgressLogger(
+//                new ProgressLogger(log, (int) 1e7, "Wrote", "records from a sorting collection"));
 
         final ProgressLogger progress = new ProgressLogger(log, (int) 1e7, "Read");
         for (final SAMRecord rec : reader) {
-            writer.addAlignment(rec);
+//            writer.addAlignment(rec);
             progress.record(rec);
         }
 
         log.info("Finished reading inputs, merging and writing to output now.");
 
         CloserUtil.close(reader);
-        writer.close();
+//        writer.close();
         return 0;
     }
 }
